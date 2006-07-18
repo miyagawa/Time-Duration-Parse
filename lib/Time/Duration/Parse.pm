@@ -92,6 +92,6 @@ CPAN.
 
 =head1 SEE ALSO
 
-L<Date::Manip>, L<http://use.perl.org/~miyagawa/journal/30310>
+L<Date::Manip>, L<DateTime::Format::Duration>, L<http://use.perl.org/~miyagawa/journal/30310>
 
 =cut
