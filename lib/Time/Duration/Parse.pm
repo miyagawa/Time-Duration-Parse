@@ -17,7 +17,6 @@ my %_Expiration_Units = ( map(($_,             1), qw(s second seconds sec)),
                           map(($_,   60*60*24*30), qw(M month months)),
                           map(($_,  60*60*24*365), qw(y year years)) );
 
-# aren't there any CPAN module that does this?
 sub parse_duration {
     my $timespec = shift;
 
