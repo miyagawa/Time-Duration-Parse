@@ -1,7 +1,7 @@
 package Time::Duration::Parse;
 
 use strict;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Carp;
 use Exporter::Lite;
@@ -9,9 +9,9 @@ our @EXPORT = qw( parse_duration );
 
 # This map is taken from Cache and Cache::Cache
 # map of expiration formats to their respective time in seconds
-my %Units = ( map(($_,             1), qw(s second seconds sec)),
-              map(($_,            60), qw(m minute minutes min)),
-              map(($_,         60*60), qw(h hour hours)),
+my %Units = ( map(($_,             1), qw(s second seconds sec secs)),
+              map(($_,            60), qw(m minute minutes min mins)),
+              map(($_,         60*60), qw(h hr hour hours)),
               map(($_,      60*60*24), qw(d day days)),
               map(($_,    60*60*24*7), qw(w week weeks)),
               map(($_,   60*60*24*30), qw(M month months)),
@@ -20,8 +20,13 @@ my %Units = ( map(($_,             1), qw(s second seconds sec)),
 sub parse_duration {
     my $timespec = shift;
 
+    # Treat plain integer as number of seconds
+    if ($timespec =~ /^-?\d+$/) {
+        return $timespec;
+    }
+
     my $duration = 0;
-    while ($timespec =~ s/^\s*(\d+)\s+(\w+)(?:\s*(?:,|and)\s*)*//i) {
+    while ($timespec =~ s/^\s*(-?\d+)\s*(\w+)(?:\s*(?:,|and)\s*)*//i) {
         my($amount, $unit) = ($1, $2);
         $unit = lc($unit) unless length($unit) == 1;
 
