@@ -1,5 +1,8 @@
 use strict;
-use Test::More tests => 37;
+use Test::More tests => 42;
+
+use FindBin qw/$Bin/;
+use lib qq($Bin/../lib);
 
 use Time::Duration::Parse;
 
@@ -33,6 +36,7 @@ ok_duration '1hr', 3600;
 ok_duration '1d 2:03', 93780;
 ok_duration '1d 2:03:01', 93781;
 ok_duration '1d -24:00', 0;
+ok_duration '1d -24:01', -60;
 ok_duration '2:03', 7380;
 
 ok_duration ' 1s   ', 1;
@@ -53,6 +57,12 @@ ok_duration '1,5h, 3s', 5403;
 ok_duration '1,5h and 3s', 5403;
 ok_duration '1.5h, 3s', 5403;
 ok_duration '1.5h and 3s', 5403;
+
+ok_duration '00:00:33', 33;
+ok_duration '-00:00:33', -33;
+
+ok_duration '00:20', 1200;
+ok_duration '-00:20', -1200;
 
 fail_duration '3 sss';
 fail_duration '6 minutes and 3 sss';

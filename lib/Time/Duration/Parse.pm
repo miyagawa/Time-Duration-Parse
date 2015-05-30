@@ -1,7 +1,7 @@
 package Time::Duration::Parse;
 
 use strict;
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Carp;
 use Exporter::Lite;
@@ -23,16 +23,16 @@ sub parse_duration {
     # Treat a plain number as a number of seconds (and parse it later)
     if ($timespec =~ /^\s*(-?\d+(?:[.,]\d+)?)\s*$/) {
         $timespec = "$1s";
+    } else {
+        # Convert hh:mm(:ss)? to something we understand
+        $timespec =~ s/\b?(\-?)(\d+):(\d\d):(\d\d)\b/$1$2h $1$3m $1$4s/g;
+        $timespec =~ s/\b?(-?)(\d+):(\d\d)\b/$1$2h $1$3m/g;
     }
-
-    # Convert hh:mm(:ss)? to something we understand
-    $timespec =~ s/\b(\d+):(\d\d):(\d\d)\b/$1h $2m $3s/g;
-    $timespec =~ s/\b(\d+):(\d\d)\b/$1h $2m/g;
 
     my $duration = 0;
     while ($timespec =~ s/^\s*(-?\d+(?:[.,]\d+)?)\s*([a-zA-Z]+)(?:\s*(?:,|and)\s*)*//i) {
         my($amount, $unit) = ($1, $2);
-        $unit = lc($unit) unless length($unit) == 1;
+        $unit = lc($unit);
 
         if (my $value = $Units{$unit}) {
             $amount =~ s/,/./;
@@ -50,6 +50,7 @@ sub parse_duration {
 }
 
 1;
+
 __END__
 
 =head1 NAME
